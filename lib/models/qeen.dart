@@ -1,7 +1,7 @@
 import 'package:chess_flutter/models/chees_item.dart';
 
-class Qeen implements ChessItem{
-  Qeen( this.place,this.team);
+class Queen implements ChessItem{
+  Queen( this.place,this.team);
   @override
   allowedMoves() {
     // TODO: implement allowedMoves
@@ -14,5 +14,8 @@ class Qeen implements ChessItem{
 
   @override
   int place;
+
+  @override
+  var name="Queen";
 
 }

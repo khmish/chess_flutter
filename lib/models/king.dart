@@ -15,4 +15,7 @@ class King implements ChessItem {
 
   @override
   int place;
+
+  @override
+  var name="King";
 }

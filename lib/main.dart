@@ -1,7 +1,9 @@
 import 'package:chess_flutter/components/place_widget.dart';
+import 'package:chess_flutter/models/empty_item.dart';
 import 'package:chess_flutter/models/rock.dart';
 import 'package:flutter/material.dart';
 
+import 'models/chees_item.dart';
 import 'models/elephent.dart';
 import 'models/horse.dart';
 import 'models/king.dart';
@@ -9,7 +11,7 @@ import 'models/qeen.dart';
 import 'models/solider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -24,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     new Rock(0, "b"),
     new Elephent(1, "b"),
     new Horse(2, "b"),
-    new Qeen(3, "b"),
+    new Queen(3, "b"),
     new King(4, "b"),
     new Horse(5, "b"),
     new Elephent(6, "b"),
@@ -37,81 +39,103 @@ class _MyAppState extends State<MyApp> {
     new Solider(13, "b"),
     new Solider(14, "b"),
     new Solider(15, "b"),
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    new Solider(40, "w"),
-    new Solider(41, "w"),
-    new Solider(42, "w"),
-    new Solider(43, "w"),
-    new Solider(44, "w"),
-    new Solider(45, "w"),
-    new Solider(46, "w"),
-    new Solider(47, "w"),
-    new Rock(48, "w"),
-    new Elephent(49, "w"),
-    new Horse(50, "w"),
-    new Qeen(51, "w"),
-    new King(52, "w"),
-    new Horse(53, "w"),
-    new Elephent(55, "w"),
+    new EmptyItem(16, ""),
+    new EmptyItem(17, ""),
+    new EmptyItem(18, ""),
+    new EmptyItem(19, ""),
+    new EmptyItem(20, ""),
+    new EmptyItem(21, ""),
+    new EmptyItem(22, ""),
+    new EmptyItem(23, ""),
+    new EmptyItem(24, ""),
+    new EmptyItem(25, ""),
+    new EmptyItem(26, ""),
+    new EmptyItem(27, ""),
+    new EmptyItem(28, ""),
+    new EmptyItem(29, ""),
+    new EmptyItem(30, ""),
+    new EmptyItem(31, ""),
+    new EmptyItem(32, ""),
+    new EmptyItem(33, ""),
+    new EmptyItem(34, ""),
+    new EmptyItem(35, ""),
+    new EmptyItem(36, ""),
+    new EmptyItem(37, ""),
+    new EmptyItem(38, ""),
+    new EmptyItem(39, ""),
+    new EmptyItem(40, ""),
+    new EmptyItem(41, ""),
+    new EmptyItem(42, ""),
+    new EmptyItem(43, ""),
+    new EmptyItem(44, ""),
+    new EmptyItem(45, ""),
+    new EmptyItem(46, ""),
+    new EmptyItem(47, ""),
+    new Solider(48, "w"),
+    new Solider(49, "w"),
+    new Solider(50, "w"),
+    new Solider(51, "w"),
+    new Solider(52, "w"),
+    new Solider(53, "w"),
+    new Solider(54, "w"),
+    new Solider(55, "w"),
     new Rock(56, "w"),
+    new Elephent(57, "w"),
+    new Horse(58, "w"),
+    new Queen(59, "w"),
+    new King(60, "w"),
+    new Horse(61, "w"),
+    new Elephent(62, "w"),
+    new Rock(63, "w"),
   ];
 
   var _whiteDeadList = [];
 
   var _blacDeadList = [];
 
-  fillBoard() {}
+  var selectedItem;
+
   Color color = Colors.blueGrey;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: GridView.count(
-          // Create a grid with 2 columns. If you change the scrollDirection to
-          // horizontal, this produces 2 rows.
-          crossAxisCount: 8,
-          // Generate 100 widgets that display their index in the List.
-          children: List.generate(_defaultList.length, (index) {
-            color = (color == Colors.blueGrey) ? Colors.white : Colors.blueGrey;
-            if (index % 8 == 0) {
-              color =
-                  (color == Colors.blueGrey) ? Colors.white : Colors.blueGrey;
-            }
-            return Center(
-              child: PlaceWdget(_defaultList[index], color),
-            );
-          }),
+    var height = MediaQuery.of(context).size.height * 0.9;
+    var width = MediaQuery.of(context).size.width * 0.7;
+
+    return Scaffold(
+      body: Center(
+        child: FittedBox(
+          child: Container(
+            height: height,
+            width: width,
+            child: GridView.count(
+              shrinkWrap: true,
+              //draw the board and coloring it
+              crossAxisCount: 8,
+              children: List.generate(
+                _defaultList.length,
+                (index) {
+                  color = ((color == Colors.blueGrey)
+                      ? Colors.blueGrey[200]
+                      : Colors.blueGrey)!;
+                  if (index % 8 == 0) {
+                    color = ((color == Colors.blueGrey)
+                        ? Colors.blueGrey[200]
+                        : Colors.blueGrey)!;
+                  }
+                  return Center(
+                    child: GestureDetector(
+                      child: PlaceWdget(_defaultList[index], color),
+                      onTap: () {
+                        ChessItem itm = _defaultList[index];
+                        print("${itm.name} ${itm.team} ${itm.place}");
+                      },
+                    ), // cell
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       ),
     );

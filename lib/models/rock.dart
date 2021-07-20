@@ -1,6 +1,7 @@
 import 'package:chess_flutter/models/chees_item.dart';
 
 class Rock implements ChessItem{
+
   Rock( this.place,this.team);
   @override
   allowedMoves() {
@@ -14,5 +15,8 @@ class Rock implements ChessItem{
 
   @override
   int place;
+
+  @override
+  var name="Rock";
 
 }

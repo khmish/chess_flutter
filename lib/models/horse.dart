@@ -15,4 +15,7 @@ class Horse implements ChessItem{
   @override
   int place;
 
+  @override
+  var name="Horse";
+
 }

@@ -7,12 +7,15 @@ class Elephent implements ChessItem{
     // TODO: implement allowedMoves
     throw UnimplementedError();
   }
-
+  
 
   @override
   var team;
 
   @override
   int place;
+
+  @override
+  var name="Elephent";
 
 }
