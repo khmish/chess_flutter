@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     new EmptyItem(33, ""),
     new EmptyItem(34, ""),
     new EmptyItem(35, ""),
-    new Queen(36, "w"),
+    new EmptyItem(36, ""),
     new EmptyItem(37, ""),
     new EmptyItem(38, ""),
     new EmptyItem(39, ""),
@@ -109,6 +109,7 @@ class _MyAppState extends State<MyApp> {
     if ((this.selectedItem is Solider)) {
       soilderMoves();
     } else if ((this.selectedItem is King)) {
+      kingMoves();
     } else if ((this.selectedItem is Queen)) {
       queenMoves();
     } else if ((this.selectedItem is Elephent)) {
@@ -313,6 +314,10 @@ class _MyAppState extends State<MyApp> {
           _defaultList[sum].possibleKill = true;
           i = 10;
         }
+        else if (_defaultList[sum].team == elephent.team) {
+          // _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
       }
     }
     for (var i = 1; i <= 8; i++) {
@@ -327,6 +332,10 @@ class _MyAppState extends State<MyApp> {
           _defaultList[sum].possibleMove = true;
         else if (_defaultList[sum].team != elephent.team) {
           _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+         else if (_defaultList[sum].team == elephent.team) {
+          // _defaultList[sum].possibleKill = true;
           i = 10;
         }
       }
@@ -346,6 +355,10 @@ class _MyAppState extends State<MyApp> {
           _defaultList[sum].possibleKill = true;
           i = 10;
         }
+         else if (_defaultList[sum].team == elephent.team) {
+          // _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
       }
     }
     for (var i = 1; i <= 8; i++) {
@@ -362,14 +375,141 @@ class _MyAppState extends State<MyApp> {
           _defaultList[sum].possibleKill = true;
           i = 10;
         }
+         else if (_defaultList[sum].team == elephent.team) {
+          // _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
       }
     }
   }
 
-  kingMoves() {}
   queenMoves() {
     elephentMoves();
     rockMoves();
+  }
+
+  kingMoves() {
+    kingXMoves();
+    kingYMoves();
+    kingDiaLMoves();
+  }
+
+  kingXMoves() {
+    ChessItem king = this.selectedItem;
+    var moveList = [];
+    moveList.add(king.place + 1);
+    moveList.add(king.place - 1);
+    int row = king.place ~/ 8;
+    int col = king.place % 8;
+    for (var move in moveList) {
+      int rowMove = move ~/ 8;
+      if (move >= 0 && move < _defaultList.length) {
+        if (row == rowMove) {
+          setState(() {
+            if (_defaultList[move] is EmptyItem)
+              _defaultList[move].possibleMove = true;
+            else if (_defaultList[move].team != king.team) {
+              _defaultList[move].possibleKill = true;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  kingYMoves() {
+    ChessItem king = this.selectedItem;
+    var moveList = [];
+    moveList.add(king.place + 8);
+    moveList.add(king.place - 8);
+    // int row = king.place ~/ 8;
+    int col = king.place % 8;
+    for (var move in moveList) {
+      int colMove = move % 8;
+      if (move >= 0 && move < _defaultList.length) {
+        if (col == colMove) {
+          setState(() {
+            if (_defaultList[move] is EmptyItem)
+              _defaultList[move].possibleMove = true;
+            else if (_defaultList[move].team != king.team) {
+              _defaultList[move].possibleKill = true;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  kingDiaLMoves() {
+    ChessItem king = this.selectedItem;
+    int row = king.place ~/ 8;
+    int col = king.place % 8;
+    print("row = $row , col = $col");
+    for (var i = 1; i <= 1; i++) {
+      int x = row + i;
+      int y = col + i;
+      if (x >= 7 || y >= 7) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != king.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+    for (var i = 1; i <= 1; i++) {
+      int x = row + i;
+      int y = col - i;
+      if (x > 7 || y < 0) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != king.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+
+    for (var i = 1; i <= 1; i++) {
+      int x = row - i;
+      int y = col - i;
+      if (x < 0 || y < 0) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != king.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+    for (var i = 1; i <= 1; i++) {
+      int x = row - i;
+      int y = col + i;
+      if (x < 0 || y > 7) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != king.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
   }
 
   @override
