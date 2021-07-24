@@ -4,7 +4,7 @@ class EmptyItem implements ChessItem{
 
 
   
-  EmptyItem( this.place,this.team);
+  EmptyItem( this.place,this.team,[this.possibleMove=false,this.possibleKill=false]);
   @override
   allowedMoves() {
     // TODO: implement allowedMoves
@@ -20,5 +20,11 @@ class EmptyItem implements ChessItem{
 
   @override
   var name="Empty";
+
+  @override
+  bool possibleKill=false;
+
+  @override
+  bool possibleMove=false;
 
 }

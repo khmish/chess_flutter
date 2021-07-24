@@ -1,7 +1,7 @@
 import 'package:chess_flutter/models/chees_item.dart';
 
 class Elephent implements ChessItem{
-  Elephent( this.place,this.team);
+  Elephent( this.place,this.team,[this.possibleMove=false,this.possibleKill=false]);
   @override
   allowedMoves() {
     // TODO: implement allowedMoves
@@ -17,5 +17,11 @@ class Elephent implements ChessItem{
 
   @override
   var name="Elephent";
+
+  @override
+  bool possibleKill=false;
+
+  @override
+  bool possibleMove=false;
 
 }

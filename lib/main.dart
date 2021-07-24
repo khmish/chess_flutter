@@ -23,7 +23,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _defaultList = [
-    new Rock(0, "b"),
+    new Rock(0, "b", false, false),
     new Elephent(1, "b"),
     new Horse(2, "b"),
     new Queen(3, "b"),
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     new EmptyItem(33, ""),
     new EmptyItem(34, ""),
     new EmptyItem(35, ""),
-    new EmptyItem(36, ""),
+    new Queen(36, "w"),
     new EmptyItem(37, ""),
     new EmptyItem(38, ""),
     new EmptyItem(39, ""),
@@ -97,45 +97,377 @@ class _MyAppState extends State<MyApp> {
 
   Color color = Colors.blueGrey;
 
+  clear() {
+    this.selectedItem = null;
+    for (var item in this._defaultList) {
+      item.possibleKill = false;
+      item.possibleMove = false;
+    }
+  }
+
+  moves() {
+    if ((this.selectedItem is Solider)) {
+      soilderMoves();
+    } else if ((this.selectedItem is King)) {
+    } else if ((this.selectedItem is Queen)) {
+      queenMoves();
+    } else if ((this.selectedItem is Elephent)) {
+      elephentMoves();
+    } else if ((this.selectedItem is Horse)) {
+      horseMoves();
+    } else if ((this.selectedItem is Rock)) {
+      rockMoves();
+    } else {}
+  }
+
+  soilderMoves() {
+    Solider solider = this.selectedItem;
+    ChessItem tmp;
+    if (solider.team == "w") {
+      int sameRow1 = ((solider.place - 7) ~/ 8);
+      int sameRow2 = ((solider.place - 8) ~/ 8);
+      int sameRow3 = ((solider.place - 9) ~/ 8);
+      if (solider.place - 8 >= 0) {
+        //forward move
+        tmp = _defaultList[solider.place - 8];
+        if (tmp is EmptyItem) {
+          tmp.possibleMove = true;
+        }
+      }
+      if (solider.place - 7 >= 0 && sameRow1 == sameRow2) {
+        //
+        tmp = _defaultList[solider.place - 7];
+        if (!(tmp is EmptyItem)) {
+          if (tmp.team != solider.team) {
+            tmp.possibleKill = true;
+          }
+        }
+        // moves.add(tmp);
+      }
+      if (solider.place - 9 >= 0 && sameRow3 == sameRow2) {
+        tmp = _defaultList[solider.place - 9];
+        if (!(tmp is EmptyItem)) {
+          if (tmp.team != solider.team) {
+            tmp.possibleKill = true;
+          }
+        }
+        // moves.add(tmp);
+      }
+    } else {
+      int sameRow1 = ((solider.place + 7) ~/ 8);
+      int sameRow2 = ((solider.place + 8) ~/ 8);
+      int sameRow3 = ((solider.place + 9) ~/ 8);
+      if (solider.place + 8 <= _defaultList.length) {
+        //forward move
+        tmp = _defaultList[solider.place + 8];
+        if (tmp is EmptyItem) {
+          tmp.possibleMove = true;
+        }
+      }
+
+      if (solider.place + 7 <= _defaultList.length && (sameRow1 == sameRow2)) {
+        //kill dia
+        tmp = _defaultList[solider.place + 7];
+        if (!(tmp is EmptyItem)) {
+          if (tmp.team != solider.team) {
+            tmp.possibleKill = true;
+          }
+        }
+        // moves.add(tmp);
+      }
+
+      if (solider.place + 9 <= _defaultList.length && (sameRow2 == sameRow3)) {
+        //kill dia
+        tmp = _defaultList[solider.place + 9];
+        if (!(tmp is EmptyItem)) {
+          if (tmp.team != solider.team) {
+            tmp.possibleKill = true;
+          }
+        }
+        // moves.add(tmp);
+      }
+    }
+  }
+
+  horseMoves() {
+    var movesList = [];
+    Horse horse = this.selectedItem;
+    ChessItem tmp;
+    movesList.add(horse.place + 16 + 1);
+    movesList.add(horse.place + 16 - 1);
+    movesList.add(horse.place + 8 + 2);
+    movesList.add(horse.place + 8 - 2);
+    movesList.add(horse.place - 8 + 2);
+    movesList.add(horse.place - 8 - 2);
+    movesList.add(horse.place - 16 + 1);
+    movesList.add(horse.place - 16 - 1);
+    for (var item in movesList) {
+      if (item >= 0 && item < _defaultList.length) {
+        int same1 = horse.place ~/ 8;
+        int same2 = item ~/ 8;
+        if (same1 != same2) {
+          if (_defaultList[item] is EmptyItem) {
+            setState(() {
+              _defaultList[item].possibleMove = true;
+            });
+          } else {
+            setState(() {
+              if (horse.team != _defaultList[item].team)
+                _defaultList[item].possibleKill = true;
+            });
+          }
+        }
+      }
+    }
+  }
+
+  rockMoves() {
+    ChessItem rock = this.selectedItem;
+    // int same1 = rock.place ~/ 8;
+    // int same2 = selectedItem.place ~/ 8;
+    for (var i = 1; i <= 8; i++) {
+      int same1 = (rock.place) ~/ 8;
+      int same2 = (rock.place + i) ~/ 8;
+      if ((rock.place + i) < _defaultList.length) {
+        if (same1 == same2) {
+          setState(() {
+            if (_defaultList[rock.place + i] is EmptyItem) {
+              _defaultList[rock.place + i].possibleMove = true;
+            } else if (_defaultList[rock.place + i].team != rock.team) {
+              _defaultList[rock.place + i].possibleKill = true;
+              i = 9;
+            } else {
+              i = 9;
+            }
+          });
+        }
+      }
+    }
+    for (var i = 1; i <= 8; i++) {
+      int same1 = rock.place ~/ 8;
+      int same2 = (rock.place - i) ~/ 8;
+      if ((rock.place - i) >= 0) {
+        if (same1 == same2) {
+          setState(() {
+            if (_defaultList[rock.place - i] is EmptyItem) {
+              _defaultList[rock.place - i].possibleMove = true;
+            } else if (_defaultList[rock.place - i].team != rock.team) {
+              _defaultList[rock.place - i].possibleKill = true;
+              i = 9;
+            } else {
+              i = 9;
+            }
+          });
+        }
+      }
+    }
+
+    for (var i = 1; i <= 8; i++) {
+      int val = rock.place + (i * 8);
+      if ((val) < _defaultList.length) {
+        setState(() {
+          if (_defaultList[val] is EmptyItem) {
+            _defaultList[val].possibleMove = true;
+          } else if (_defaultList[val].team != rock.team) {
+            _defaultList[val].possibleKill = true;
+            i = 9;
+          } else {
+            i = 9;
+          }
+        });
+      }
+    }
+    for (var i = 1; i <= 8; i++) {
+      int val = rock.place - (i * 8);
+      if ((val) >= 0) {
+        setState(() {
+          if (_defaultList[val] is EmptyItem) {
+            _defaultList[val].possibleMove = true;
+          } else if (_defaultList[val].team != rock.team) {
+            _defaultList[val].possibleKill = true;
+            i = 9;
+          } else {
+            i = 9;
+          }
+        });
+      }
+    }
+  }
+
+  elephentMoves() {
+    ChessItem elephent = this.selectedItem;
+    int row = elephent.place ~/ 8;
+    int col = elephent.place % 8;
+    print("row = $row , col = $col");
+    for (var i = 1; i <= 8; i++) {
+      int x = row + i;
+      int y = col + i;
+      if (x >= 7 || y >= 7) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != elephent.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+    for (var i = 1; i <= 8; i++) {
+      int x = row + i;
+      int y = col - i;
+      if (x > 7 || y < 0) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != elephent.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+
+    for (var i = 1; i <= 8; i++) {
+      int x = row - i;
+      int y = col - i;
+      if (x < 0 || y < 0) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != elephent.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+    for (var i = 1; i <= 8; i++) {
+      int x = row - i;
+      int y = col + i;
+      if (x < 0 || y > 7) {
+        i = 10;
+      } else {
+        int sum = ((x * 8) + (y));
+        print("sum = $sum");
+        if (_defaultList[sum] is EmptyItem)
+          _defaultList[sum].possibleMove = true;
+        else if (_defaultList[sum].team != elephent.team) {
+          _defaultList[sum].possibleKill = true;
+          i = 10;
+        }
+      }
+    }
+  }
+
+  kingMoves() {}
+  queenMoves() {
+    elephentMoves();
+    rockMoves();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height * 0.9;
-    var width = MediaQuery.of(context).size.width * 0.7;
+    var width = MediaQuery.of(context).size.width * 0.6;
 
     return Scaffold(
-      body: Center(
-        child: FittedBox(
-          child: Container(
-            height: height,
-            width: width,
-            child: GridView.count(
-              shrinkWrap: true,
-              //draw the board and coloring it
-              crossAxisCount: 8,
-              children: List.generate(
-                _defaultList.length,
-                (index) {
-                  color = ((color == Colors.blueGrey)
-                      ? Colors.blueGrey[200]
-                      : Colors.blueGrey)!;
-                  if (index % 8 == 0) {
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                for (var i in _whiteDeadList) PlaceWdget(i, Colors.blueGrey)
+              ],
+            ),
+            Container(
+              height: height,
+              width: width,
+              child: GridView.count(
+                shrinkWrap: true,
+                //draw the board and coloring it
+                crossAxisCount: 8,
+                children: List.generate(
+                  _defaultList.length,
+                  (index) {
                     color = ((color == Colors.blueGrey)
                         ? Colors.blueGrey[200]
                         : Colors.blueGrey)!;
-                  }
-                  return Center(
-                    child: GestureDetector(
-                      child: PlaceWdget(_defaultList[index], color),
-                      onTap: () {
-                        ChessItem itm = _defaultList[index];
-                        print("${itm.name} ${itm.team} ${itm.place}");
-                      },
-                    ), // cell
-                  );
-                },
+                    if (index % 8 == 0) {
+                      color = ((color == Colors.blueGrey)
+                          ? Colors.blueGrey[200]
+                          : Colors.blueGrey)!;
+                    }
+                    return Center(
+                      child: GestureDetector(
+                        child: PlaceWdget(_defaultList[index], color),
+                        onTap: () {
+                          int isB = index % 8;
+                          ChessItem itm = _defaultList[index];
+                          setState(() {
+                            if (itm.possibleKill && this.selectedItem != null) {
+                              int currentPlace = itm.place;
+                              if (itm.team == "w") {
+                                _whiteDeadList.add(itm);
+
+                                _defaultList[currentPlace] = this.selectedItem;
+                                _defaultList[this.selectedItem.place] =
+                                    new EmptyItem(this.selectedItem.place, "");
+                                this.selectedItem.place = currentPlace;
+                              } else {
+                                _blacDeadList.add(itm);
+
+                                _defaultList[currentPlace] = this.selectedItem;
+                                _defaultList[this.selectedItem.place] =
+                                    new EmptyItem(this.selectedItem.place, "");
+
+                                this.selectedItem.place = currentPlace;
+                              }
+                              clear();
+                            }
+                            if (itm.possibleMove && this.selectedItem != null) {
+                              int currentPlace = itm.place;
+
+                              _defaultList[currentPlace] = this.selectedItem;
+                              _defaultList[this.selectedItem.place] =
+                                  new EmptyItem(this.selectedItem.place, "");
+
+                              this.selectedItem.place = currentPlace;
+
+                              clear();
+                            }
+                            if (itm.possibleMove == false &&
+                                itm.possibleKill == false &&
+                                this.selectedItem != null) {
+                              clear();
+                            }
+                            this.selectedItem = itm.possibleKill ? null : itm;
+                            // clear();
+                            moves();
+                          });
+                          // print("is%8 :${isB} , index :${index}");
+                          print("${itm.name} ${itm.team} ${itm.place}");
+                        },
+                      ), // cell
+                    );
+                  },
+                ),
               ),
             ),
-          ),
+            Row(
+              children: [
+                for (var i in _blacDeadList) PlaceWdget(i, Colors.white)
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -2,7 +2,7 @@ import 'package:chess_flutter/models/chees_item.dart';
 
 class King implements ChessItem {
 
-  King( this.place,this.team);
+  King( this.place,this.team,[this.possibleMove=false,this.possibleKill=false]);
   @override
   allowedMoves() {
     // TODO: implement allowedMoves
@@ -18,4 +18,10 @@ class King implements ChessItem {
 
   @override
   var name="King";
+
+  @override
+  bool possibleKill=false;
+
+  @override
+  bool possibleMove=false;
 }

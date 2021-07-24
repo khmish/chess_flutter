@@ -1,16 +1,12 @@
 import 'package:chess_flutter/models/chees_item.dart';
 
-class Solider implements ChessItem{
-
+class Solider implements ChessItem {
+  Solider( this.place,this.team,[this.possibleMove=false,this.possibleKill=false]);
 
   
-  Solider( this.place,this.team);
   @override
   allowedMoves() {
-    // TODO: implement allowedMoves
-    throw UnimplementedError();
   }
-
 
   @override
   var team;
@@ -19,6 +15,11 @@ class Solider implements ChessItem{
   int place;
 
   @override
-  var name="Solider";
+  var name = "Solider";
 
+  @override
+  bool possibleKill=false;
+
+  @override
+  bool possibleMove=false;
 }

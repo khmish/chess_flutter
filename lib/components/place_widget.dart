@@ -13,7 +13,7 @@ class PlaceWdget extends StatefulWidget {
   final item;
 
   final Color colorItem;
-  const PlaceWdget(this.item, this.colorItem);
+  PlaceWdget(this.item, this.colorItem);
 
   @override
   _PlaceWdgetState createState() => _PlaceWdgetState();
@@ -29,43 +29,37 @@ class _PlaceWdgetState extends State<PlaceWdget> {
       icn = Icon(
         Icons.local_police_outlined,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else if ((widget.item is King)) {
       icn = Icon(
         Icons.elderly_outlined,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
-
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else if ((widget.item is Queen)) {
       icn = Icon(
         Icons.pregnant_woman,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
-
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else if ((widget.item is Elephent)) {
       icn = Icon(
         Icons.car_repair,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
-        
-
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else if ((widget.item is Horse)) {
       icn = Icon(
         Icons.motorcycle_outlined,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
-
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else if ((widget.item is Rock)) {
       icn = Icon(
         Icons.house_outlined,
         size: 35,
-        color: name1.team=="b"?Colors.black87:Colors.white70,
-
+        color: name1.team == "b" ? Colors.black87 : Colors.white70,
       );
     } else {
       icn = Text("");
@@ -73,8 +67,17 @@ class _PlaceWdgetState extends State<PlaceWdget> {
 
     return Container(
       color: widget.colorItem,
-      child: Center(
-        child: icn,
+      child: Container(
+        decoration: BoxDecoration(
+          // color: Colors.yellow[200],
+          border: name1.possibleKill || name1.possibleMove?Border.all(
+            color: name1.possibleKill ?Colors.red:name1.possibleMove?Colors.green:Colors.white,
+            width: 5,
+          ):Border.all(),
+        ),
+        child: Center(
+          child: icn,
+        ),
       ),
     );
   }
