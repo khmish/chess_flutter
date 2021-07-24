@@ -99,6 +99,8 @@ class _MyAppState extends State<MyApp> {
 
   Color color = Colors.blueGrey;
 
+  bool isMoved = false;
+
   clear() {
     this.selectedItem = null;
     for (var item in this._defaultList) {
@@ -123,7 +125,7 @@ class _MyAppState extends State<MyApp> {
       } else if ((this.selectedItem is Rock)) {
         rockMoves();
       } else {}
-      turnTeam = turnTeam == "w" ? "b" : "w";
+      
     } else {
       Fluttertoast.showToast(
           msg: "it is the ${turnTeam == 'w' ? 'white team' : 'black team'}",
@@ -134,6 +136,9 @@ class _MyAppState extends State<MyApp> {
           textColor: Colors.white,
           fontSize: 25.0);
     }
+    if (isMoved) {
+        turnTeam = turnTeam == "w" ? "b" : "w";
+      }
   }
 
   soilderMoves() {
@@ -208,7 +213,6 @@ class _MyAppState extends State<MyApp> {
   horseMoves() {
     var movesList = [];
     Horse horse = this.selectedItem;
-    ChessItem tmp;
     movesList.add(horse.place + 16 + 1);
     movesList.add(horse.place + 16 - 1);
     movesList.add(horse.place + 8 + 2);
@@ -411,7 +415,6 @@ class _MyAppState extends State<MyApp> {
     moveList.add(king.place + 1);
     moveList.add(king.place - 1);
     int row = king.place ~/ 8;
-    int col = king.place % 8;
     for (var move in moveList) {
       int rowMove = move ~/ 8;
       if (move >= 0 && move < _defaultList.length) {
@@ -586,6 +589,7 @@ class _MyAppState extends State<MyApp> {
                                 this.selectedItem.place = currentPlace;
                               }
                               clear();
+                              isMoved = true;
                             }
                             if (itm.possibleMove && this.selectedItem != null) {
                               //possible move
@@ -598,21 +602,23 @@ class _MyAppState extends State<MyApp> {
                               this.selectedItem.place = currentPlace;
 
                               clear();
+                              isMoved = true;
                             }
                             if (itm.possibleMove == false &&
                                 itm.possibleKill == false &&
                                 this.selectedItem != null) {
                               //unselect move
                               clear();
+                              isMoved = false;
                             }
                             this.selectedItem = itm.possibleKill ? null : itm;
 
                             // clear();
-                            moves();//move
+                            moves(); //move
                           });
                           // print("is%8 :${isB} , index :${index}");
 
-                          print("${itm.name} ${itm.team} ${itm.place}");
+                          print("${itm.name} ${itm.team} ${itm.place} , isMoved= $isMoved");
                         },
                       ), // cell
                     );

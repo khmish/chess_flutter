@@ -4,5 +4,4 @@ abstract class ChessItem {
   var name;
   bool possibleMove=false;
   bool possibleKill=false;
-  allowedMoves();
 }

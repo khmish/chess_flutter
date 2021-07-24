@@ -4,9 +4,7 @@ class Solider implements ChessItem {
   Solider( this.place,this.team,[this.possibleMove=false,this.possibleKill=false]);
 
   
-  @override
-  allowedMoves() {
-  }
+
 
   @override
   var team;
