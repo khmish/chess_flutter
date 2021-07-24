@@ -9,6 +9,7 @@ import 'models/horse.dart';
 import 'models/king.dart';
 import 'models/qeen.dart';
 import 'models/solider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(MaterialApp(home: MyApp()));
@@ -88,6 +89,7 @@ class _MyAppState extends State<MyApp> {
     new Elephent(62, "w"),
     new Rock(63, "w"),
   ];
+  var turnTeam = "w";
 
   var _whiteDeadList = [];
 
@@ -106,19 +108,32 @@ class _MyAppState extends State<MyApp> {
   }
 
   moves() {
-    if ((this.selectedItem is Solider)) {
-      soilderMoves();
-    } else if ((this.selectedItem is King)) {
-      kingMoves();
-    } else if ((this.selectedItem is Queen)) {
-      queenMoves();
-    } else if ((this.selectedItem is Elephent)) {
-      elephentMoves();
-    } else if ((this.selectedItem is Horse)) {
-      horseMoves();
-    } else if ((this.selectedItem is Rock)) {
-      rockMoves();
-    } else {}
+    if (this.selectedItem.team == turnTeam) {
+      //check the turns for each team
+      if ((this.selectedItem is Solider)) {
+        soilderMoves();
+      } else if ((this.selectedItem is King)) {
+        kingMoves();
+      } else if ((this.selectedItem is Queen)) {
+        queenMoves();
+      } else if ((this.selectedItem is Elephent)) {
+        elephentMoves();
+      } else if ((this.selectedItem is Horse)) {
+        horseMoves();
+      } else if ((this.selectedItem is Rock)) {
+        rockMoves();
+      } else {}
+      turnTeam = turnTeam == "w" ? "b" : "w";
+    } else {
+      Fluttertoast.showToast(
+          msg: "it is the ${turnTeam == 'w' ? 'white team' : 'black team'}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 25.0);
+    }
   }
 
   soilderMoves() {
@@ -313,8 +328,7 @@ class _MyAppState extends State<MyApp> {
         else if (_defaultList[sum].team != elephent.team) {
           _defaultList[sum].possibleKill = true;
           i = 10;
-        }
-        else if (_defaultList[sum].team == elephent.team) {
+        } else if (_defaultList[sum].team == elephent.team) {
           // _defaultList[sum].possibleKill = true;
           i = 10;
         }
@@ -333,8 +347,7 @@ class _MyAppState extends State<MyApp> {
         else if (_defaultList[sum].team != elephent.team) {
           _defaultList[sum].possibleKill = true;
           i = 10;
-        }
-         else if (_defaultList[sum].team == elephent.team) {
+        } else if (_defaultList[sum].team == elephent.team) {
           // _defaultList[sum].possibleKill = true;
           i = 10;
         }
@@ -354,8 +367,7 @@ class _MyAppState extends State<MyApp> {
         else if (_defaultList[sum].team != elephent.team) {
           _defaultList[sum].possibleKill = true;
           i = 10;
-        }
-         else if (_defaultList[sum].team == elephent.team) {
+        } else if (_defaultList[sum].team == elephent.team) {
           // _defaultList[sum].possibleKill = true;
           i = 10;
         }
@@ -374,8 +386,7 @@ class _MyAppState extends State<MyApp> {
         else if (_defaultList[sum].team != elephent.team) {
           _defaultList[sum].possibleKill = true;
           i = 10;
-        }
-         else if (_defaultList[sum].team == elephent.team) {
+        } else if (_defaultList[sum].team == elephent.team) {
           // _defaultList[sum].possibleKill = true;
           i = 10;
         }
@@ -550,12 +561,14 @@ class _MyAppState extends State<MyApp> {
                       child: GestureDetector(
                         child: PlaceWdget(_defaultList[index], color),
                         onTap: () {
-                          int isB = index % 8;
                           ChessItem itm = _defaultList[index];
+
                           setState(() {
                             if (itm.possibleKill && this.selectedItem != null) {
+                              //kill move
                               int currentPlace = itm.place;
                               if (itm.team == "w") {
+                                //add to white kill list
                                 _whiteDeadList.add(itm);
 
                                 _defaultList[currentPlace] = this.selectedItem;
@@ -563,6 +576,7 @@ class _MyAppState extends State<MyApp> {
                                     new EmptyItem(this.selectedItem.place, "");
                                 this.selectedItem.place = currentPlace;
                               } else {
+                                //add to black kill list
                                 _blacDeadList.add(itm);
 
                                 _defaultList[currentPlace] = this.selectedItem;
@@ -574,6 +588,7 @@ class _MyAppState extends State<MyApp> {
                               clear();
                             }
                             if (itm.possibleMove && this.selectedItem != null) {
+                              //possible move
                               int currentPlace = itm.place;
 
                               _defaultList[currentPlace] = this.selectedItem;
@@ -587,13 +602,16 @@ class _MyAppState extends State<MyApp> {
                             if (itm.possibleMove == false &&
                                 itm.possibleKill == false &&
                                 this.selectedItem != null) {
+                              //unselect move
                               clear();
                             }
                             this.selectedItem = itm.possibleKill ? null : itm;
+
                             // clear();
-                            moves();
+                            moves();//move
                           });
                           // print("is%8 :${isB} , index :${index}");
+
                           print("${itm.name} ${itm.team} ${itm.place}");
                         },
                       ), // cell
